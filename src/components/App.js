@@ -1,5 +1,6 @@
 import React from 'react'; // Библиотеки реакт
 import { Route, Routes, Navigate } from 'react-router-dom'; // Routes для роутов
+import { ProtectedRouteElement } from "./ProtectedRoute"; // импортируем HOC
 import { api } from '../utils/Api'; // Запросы на сервер
 import { useState, useEffect } from 'react'; // Хуки реакт
 import { Header } from './Header';
@@ -135,7 +136,7 @@ function App() {
           <Routes>
             <Route path="/" element={loggedIn ? <Navigate to="/main" replace /> : <Navigate to="/sign-in" replace />} />
 {/* Основное содержимое страницы */}
-            <Route path="/main" element={
+            <Route path="/main" element={<ProtectedRouteElement element={
               <Main
                 onEditProfile={handleEditProfileClick} // Передаём в Main функцию открытия попапа редактирования профиля
                 onAddPlace={handleAddPlaceClick} // Передаём в Main функцию открытия попапа добавления карточки
@@ -143,9 +144,9 @@ function App() {
                 onCardClick={handleCardClick} // Прокидываем в Card обработчик handleCardClick, через компонент Main
                 onCardLike={handleCardLike} // Прокидываем в Card обработчик handleCardLike, через компонент Main
                 onCardDelete={handleCardDelete} // Прокидываем в Card обработчик handleCardDelete, через компонент Main
-              />} />
-            <Route path="/sign-in" element={<Main />} />
-            <Route path="/sign-up" element={<Main />} />
+              />} loggedIn={loggedIn} />} />
+            <Route path="/sign-in" element={<Footer />} />
+            <Route path="/sign-up" element={<Footer />} />
           </Routes>
     
 {/* Подвал сайта */}
