@@ -20,7 +20,7 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(true);
   const [cards, setCards] = useState([]);
 
 // Константа с условием (в конце) - проверка является ли хотя бы 1 попап открытым
@@ -136,15 +136,15 @@ function App() {
           <Routes>
             <Route path="/" element={loggedIn ? <Navigate to="/main" replace /> : <Navigate to="/sign-in" replace />} />
 {/* Основное содержимое страницы */}
-            <Route path="/main" element={<ProtectedRouteElement element={
-              <Main
+            <Route path="/main" element={<ProtectedRouteElement
+              element={ Main }
                 onEditProfile={handleEditProfileClick} // Передаём в Main функцию открытия попапа редактирования профиля
                 onAddPlace={handleAddPlaceClick} // Передаём в Main функцию открытия попапа добавления карточки
                 onEditAvatar={handleEditAvatarClick} // Передаём в Main функцию открытия попапа редактирования аватарки
                 onCardClick={handleCardClick} // Прокидываем в Card обработчик handleCardClick, через компонент Main
                 onCardLike={handleCardLike} // Прокидываем в Card обработчик handleCardLike, через компонент Main
                 onCardDelete={handleCardDelete} // Прокидываем в Card обработчик handleCardDelete, через компонент Main
-              />} loggedIn={loggedIn} />} />
+              loggedIn={loggedIn} />} />
             <Route path="/sign-in" element={<Footer />} />
             <Route path="/sign-up" element={<Footer />} />
           </Routes>
