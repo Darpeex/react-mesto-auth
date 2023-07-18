@@ -1,4 +1,5 @@
 import React from 'react'; // Библиотеки реакт
+import { Route, Routes, Navigate } from 'react-router-dom'; // Routes для роутов
 import { api } from '../utils/Api'; // Запросы на сервер
 import { useState, useEffect } from 'react'; // Хуки реакт
 import { Header } from './Header';
@@ -18,6 +19,7 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false);
   const [cards, setCards] = useState([]);
 
 // Константа с условием (в конце) - проверка является ли хотя бы 1 попап открытым
@@ -130,15 +132,21 @@ function App() {
 {/* Шапка сайта */}
           <Header />
 
+          <Routes>
+            <Route path="/" element={loggedIn ? <Navigate to="/main" replace /> : <Navigate to="/sign-in" replace />} />
 {/* Основное содержимое страницы */}
-          <Main
-            onEditProfile={handleEditProfileClick} // Передаём в Main функцию открытия попапа редактирования профиля
-            onAddPlace={handleAddPlaceClick} // Передаём в Main функцию открытия попапа добавления карточки
-            onEditAvatar={handleEditAvatarClick} // Передаём в Main функцию открытия попапа редактирования аватарки
-            onCardClick={handleCardClick} // Прокидываем в Card обработчик handleCardClick, через компонент Main
-            onCardLike={handleCardLike} // Прокидываем в Card обработчик handleCardLike, через компонент Main
-            onCardDelete={handleCardDelete} // Прокидываем в Card обработчик handleCardDelete, через компонент Main
-          />
+            <Route path="/main" element={
+              <Main
+                onEditProfile={handleEditProfileClick} // Передаём в Main функцию открытия попапа редактирования профиля
+                onAddPlace={handleAddPlaceClick} // Передаём в Main функцию открытия попапа добавления карточки
+                onEditAvatar={handleEditAvatarClick} // Передаём в Main функцию открытия попапа редактирования аватарки
+                onCardClick={handleCardClick} // Прокидываем в Card обработчик handleCardClick, через компонент Main
+                onCardLike={handleCardLike} // Прокидываем в Card обработчик handleCardLike, через компонент Main
+                onCardDelete={handleCardDelete} // Прокидываем в Card обработчик handleCardDelete, через компонент Main
+              />} />
+            <Route path="/sign-in" element={<Main />} />
+            <Route path="/sign-up" element={<Main />} />
+          </Routes>
     
 {/* Подвал сайта */}
           <Footer />
@@ -150,7 +158,7 @@ function App() {
 			    <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
 
 {/* Попап добавления карточки */}
-          <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit}/>
+          <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
 
 {/* Попап подтверждения удаления */}
           {/* <ConfirmationPopup open={isConfirmationPopupOpen} /> */}
