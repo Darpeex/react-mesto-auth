@@ -180,7 +180,7 @@ function App() {
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
 {/* Попап результата регистрации */}
-          <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} />
+          <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} loggedIn={loggedIn} />
         </CardsContext.Provider>
         </CurrentUserContext.Provider>
 
