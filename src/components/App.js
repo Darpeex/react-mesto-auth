@@ -1,5 +1,5 @@
 import React from 'react'; // Библиотеки реакт
-import { Route, Routes, Navigate, useLocation } from 'react-router-dom'; // Routes для роутов
+import { Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom'; // Routes для роутов
 import { ProtectedRouteElement } from "./ProtectedRoute"; // импортируем HOC
 import { api } from '../utils/Api'; // Запросы на сервер
 import { useState, useEffect } from 'react'; // Хуки реакт
@@ -15,6 +15,7 @@ import { EditProfilePopup } from './EditProfilePopup';
 import { AddPlacePopup } from './AddPlacePopup';
 import { CurrentUserContext } from '../context/CurrentUserContext';
 import { CardsContext } from '../context/CardsContext';
+import * as auth from '../utils/Auth';
 import '../index.css'; // Файлы со стилями
 
 function App() {
@@ -24,11 +25,14 @@ function App() {
   const [isInfoTooltip, setIsInfoTooltip] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState('');
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [userData, setUserData] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false);
   const [cards, setCards] = useState([]);
 
-// Возвращает объект location, представляющий текущий URL.
+// Возвращает объект location, представляющий текущий URL
   const location = useLocation();
+// Создаёт функцию, которая помогает пользователю перейти на определенную страницу
+  const navigate = useNavigate();
 // Константа с условием (в конце) - проверка является ли хотя бы 1 попап открытым
   const isAnyPopupOpened = isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || isInfoTooltip ||(Object.keys(selectedCard).length !== 0);
 // Отвечает за закрытие попапов при нажатии ESC
@@ -46,6 +50,33 @@ function App() {
         document.removeEventListener('keydown', handleEscClose); // Если попапы закрыты, удаляется слушатель и попап закрывается на Esc
       };
   }, [isAnyPopupOpened]);
+
+  const jwt = localStorage.getItem('jwt');
+  // console.log(jwt)
+  const tokenCheck = () => {
+    // если у пользователя есть токен в localStorage,
+    // эта функция проверит валидность токена
+    console.log(jwt)
+    if (jwt){
+      // проверим токен
+      auth.checkToken(jwt).then((res) => {
+        if (res){
+          // console.log(res.data.email)
+          const userData = { // здесь можем получить данные пользователя!
+            email: res.data.email
+          }
+          setLoggedIn(true);// авторизуем пользователя
+          setUserData(userData)
+          navigate("/main", {replace: true})
+        }
+      });
+    }
+  }
+
+// Проверка наличия токена у пользователя
+  useEffect(() => {
+    tokenCheck();
+  }, [jwt])
 
 // Получение данных пользователя с сервера
   useEffect(() => {
@@ -94,6 +125,9 @@ function App() {
   const handleInfoTooltip = () => {
     setIsInfoTooltip(true);
   }
+  const handleLogin = () => {
+    setLoggedIn(true);
+  }
 	const closeAllPopups = () => {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
@@ -133,6 +167,13 @@ function App() {
     .catch((err) => console.log(`Ошибка: ${err}`)); 
   }
 
+// Удаляем токен из браузерного хранилища  
+  function handleDeleteTocken() {
+    localStorage.removeItem('jwt');
+    setLoggedIn(false);
+    setUserData({});    
+  }
+
 // Происходит отрисовка компонентов?
   return (
     <div className="App">
@@ -141,7 +182,7 @@ function App() {
         <CurrentUserContext.Provider value={currentUser}> {/* контекст становится доступен всем компонентам */}
         <CardsContext.Provider value={cards}> {/* ... глобальный контекст */}
 {/* Шапка сайта */}
-          <Header location={location} />
+          <Header location={location} userData={userData} onSignOut={handleDeleteTocken} />
 
           <Routes>
             <Route path="/" element={loggedIn ? <Navigate to="/main" replace /> : <Navigate to="/sign-in" replace />} />
@@ -157,8 +198,8 @@ function App() {
                 onCardLike={handleCardLike} // Прокидываем в Card обработчик handleCardLike, через компонент Main
                 onCardDelete={handleCardDelete} // Прокидываем в Card обработчик handleCardDelete, через компонент Main
               loggedIn={loggedIn} />} />
-            <Route path="/sign-in" element={<Login />} /> {/* Сделать подобие ProtectedRoute - зачем авторизованному пользователю сюда попадать? */}
-            <Route path="/sign-up" element={<Register />} /> {/* Сделать подобие ProtectedRoute - зачем авторизованному пользователю сюда попадать? */}
+            <Route path="/sign-in" element={<Login handleLogin={handleLogin} />} />
+            <Route path="/sign-up" element={<Register />} />
           </Routes>
     
 {/* Подвал сайта */}

@@ -1,40 +1,51 @@
-import React from 'react';
-// import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import * as auth from '../utils/Auth';
 import '../styles/Login.css';
 
-export class Login extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      username: '',
-      password: ''
-    }
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+export const Login = ({ handleLogin }) => {
+  const navigate = useNavigate();
 
-  }
-  handleChange(e) {
+  const [formValue, setFormValue] = useState({
+    email: '',
+    password: ''
+  })
+
+  const handleChange = (e) => {
     const {name, value} = e.target;
-    this.setState({
+
+    setFormValue({
+      ...formValue,
       [name]: value
     });
   }
-  handleSubmit(e){
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // здесь обрабатываем вход в систему
-  }
-  render(){
-    return(
-      <div className="login">
-        <p className="login__welcome">Вход</p>
-        <form onSubmit={this.handleSubmit} className="login__form">
-          <input required id="username" name="username" type="text" value={this.state.username} onChange={this.handleChange} placeholder="Email" />
-          <input required id="password" name="password" type="password" value={this.state.password} onChange={this.handleChange} placeholder="Пароль" />
-          <div className="login__button-container">
-            <button type="submit" className="login__link">Войти</button>
-          </div>
-        </form>
-      </div>
-    )
-  }
+    if (!formValue.email || !formValue.password){
+      return;
+    }
+    auth.login( formValue.password, formValue.email )
+      .then((data) => {
+        // console.log(data)
+        if (data.token){
+          setFormValue({ password: '', email: ''});
+          handleLogin();
+          navigate('/main', {replace: true});
+        }
+      })
+      .catch(err => console.log(err));
+  } 
+
+  return(
+    <div className="login">
+      <p className="login__welcome">Вход</p>
+      <form onSubmit={handleSubmit} className="login__form">
+        <input required id="email" name="email" type="text" value={formValue.email} onChange={handleChange} placeholder="Email" />
+        <input required id="password" name="password" type="password" value={formValue.password} onChange={handleChange} placeholder="Пароль" />
+        <div className="login__button-container">
+          <button type="submit" className="login__link">Войти</button>
+        </div>
+      </form>
+    </div>
+  )
 }
