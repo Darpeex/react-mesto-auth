@@ -4,7 +4,7 @@ import { Card } from './Card';
 import { CurrentUserContext } from '../context/CurrentUserContext';
 import { CardsContext } from '../context/CardsContext';
 
-export function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike, onCardDelete }) {  // Передаются функции открытия попапов из App.js
+export function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike, onCardDelete, onInfoTooltip }) {  // Передаются функции открытия попапов из App.js
   const currentUser = React.useContext(CurrentUserContext); // Подписываемся на контекст пользователя, а далее в html передаём данные в соответствующие поля
   const cards = React.useContext(CardsContext); // Подписываемся на контекст карточек, затем передаём массив карточек и обрабатываем их 
   return (
@@ -16,6 +16,7 @@ export function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onC
           <div className="profile__avatar">
             <img className="profile__avatar-image" src={currentUser.avatar} alt="Аватарка"/>
             <button className="profile__avatar-button" type="button" onClick={onEditAvatar} aria-label="Обновить аватарку"></button>
+            {/* <button className="profile__avatar-button" type="button" onClick={onInfoTooltip} aria-label="Обновить аватарку"></button> */}
           </div>
           <div className="profile__content">
             <h1 className="profile__name">{currentUser.name}</h1>

@@ -76,3 +76,4 @@
 @import url(./blocks/popup/__image-subtitle/popup__image-subtitle.css);
 
 @import url(./blocks/popup/__title/_padding-less/popup__title_padding-less.css);
+@import url(./blocks/popup/__title/_info-tooltip/popup__container_info-tooltip.css);

@@ -1,10 +1,13 @@
 import React from 'react'; // Библиотеки реакт
-import { Route, Routes, Navigate } from 'react-router-dom'; // Routes для роутов
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom'; // Routes для роутов
 import { ProtectedRouteElement } from "./ProtectedRoute"; // импортируем HOC
 import { api } from '../utils/Api'; // Запросы на сервер
 import { useState, useEffect } from 'react'; // Хуки реакт
 import { Header } from './Header';
 import { Main } from './Main';
+import { Login } from './Login';
+import { Register } from './Register';
+import { InfoTooltip } from './InfoTooltip';
 import { Footer } from './Footer';
 import { ImagePopup } from './ImagePopup';
 import { EditAvatarPopup } from './EditAvatarPopup';
@@ -18,13 +21,16 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isInfoTooltip, setIsInfoTooltip] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState('');
   const [loggedIn, setLoggedIn] = useState(true);
   const [cards, setCards] = useState([]);
 
+// Возвращает объект location, представляющий текущий URL.
+  const location = useLocation();
 // Константа с условием (в конце) - проверка является ли хотя бы 1 попап открытым
-  const isAnyPopupOpened = isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || (Object.keys(selectedCard).length !== 0);
+  const isAnyPopupOpened = isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || isInfoTooltip ||(Object.keys(selectedCard).length !== 0);
 // Отвечает за закрытие попапов при нажатии ESC
   useEffect(() => {
     const handleEscClose = (e) => {
@@ -85,10 +91,14 @@ function App() {
   const handleAddPlaceClick = () => {
     setIsAddPlacePopupOpen(true);
   }
+  const handleInfoTooltip = () => {
+    setIsInfoTooltip(true);
+  }
 	const closeAllPopups = () => {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+    setIsInfoTooltip(false);
     setSelectedCard({});
   }
 
@@ -131,22 +141,24 @@ function App() {
         <CurrentUserContext.Provider value={currentUser}> {/* контекст становится доступен всем компонентам */}
         <CardsContext.Provider value={cards}> {/* ... глобальный контекст */}
 {/* Шапка сайта */}
-          <Header />
+          <Header location={location} />
 
           <Routes>
             <Route path="/" element={loggedIn ? <Navigate to="/main" replace /> : <Navigate to="/sign-in" replace />} />
+            <Route path="/*" element={loggedIn ? <Navigate to="/main" replace /> : <Navigate to="/sign-in" replace />} />
 {/* Основное содержимое страницы */}
             <Route path="/main" element={<ProtectedRouteElement
               element={ Main }
                 onEditProfile={handleEditProfileClick} // Передаём в Main функцию открытия попапа редактирования профиля
                 onAddPlace={handleAddPlaceClick} // Передаём в Main функцию открытия попапа добавления карточки
                 onEditAvatar={handleEditAvatarClick} // Передаём в Main функцию открытия попапа редактирования аватарки
+                onInfoTooltip={handleInfoTooltip} // Прокидываем в Main обработчик handleInfoTooltip, через компонент Main
                 onCardClick={handleCardClick} // Прокидываем в Card обработчик handleCardClick, через компонент Main
                 onCardLike={handleCardLike} // Прокидываем в Card обработчик handleCardLike, через компонент Main
                 onCardDelete={handleCardDelete} // Прокидываем в Card обработчик handleCardDelete, через компонент Main
               loggedIn={loggedIn} />} />
-            <Route path="/sign-in" element={<Footer />} />
-            <Route path="/sign-up" element={<Footer />} />
+            <Route path="/sign-in" element={<Login />} /> {/* Сделать подобие ProtectedRoute - зачем авторизованному пользователю сюда попадать? */}
+            <Route path="/sign-up" element={<Register />} /> {/* Сделать подобие ProtectedRoute - зачем авторизованному пользователю сюда попадать? */}
           </Routes>
     
 {/* Подвал сайта */}
@@ -166,6 +178,9 @@ function App() {
 
 {/* Попап открытия карточки */}
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+
+{/* Попап результата регистрации */}
+          <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} />
         </CardsContext.Provider>
         </CurrentUserContext.Provider>
 
