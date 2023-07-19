@@ -5,14 +5,14 @@ import '../styles/Register.css';
 
 export const Register = () => {
   const [formValue, setFormValue] = useState({
+    password: '',
     email: '',
-    password: ''
   })
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const {name, value} = e.target;
-
+    console.log(e.target.value)
     setFormValue({
       ...formValue,
       [name]: value
@@ -20,13 +20,14 @@ export const Register = () => {
   }
 
   const handleSubmit = (e) => {
-      e.preventDefault()
-      const { email, password } = formValue;
-      auth.register( email, password ).then((res) => {
+    e.preventDefault()
+    const { password, email } = formValue;
+    auth.register( password, email ).then((res) => {
+      console.log(res)
         navigate('/sign-in', {replace: true});
       }
-    );
-  } 
+    ).catch((e) => console.log(e)) 
+  }
 
   return(
     <div className="register">
@@ -40,7 +41,7 @@ export const Register = () => {
       </form>
       <div className="register__signup">
         <p>Уже зарегистрированны?</p>
-        <Link to="/register" className="signup__link">Войти</Link>
+        <Link to="/sign-in" className="signup__link">Войти</Link>
       </div>
     </div>
   )
