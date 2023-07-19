@@ -114,3 +114,7 @@
   cursor: pointer;
   opacity: 0.5;
 }
+input:-internal-autofill-selected {
+    background-color: whitesmoke;
+    outline: none;
+}
