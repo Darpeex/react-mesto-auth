@@ -1,5 +1,3 @@
-import { InfoTooltip } from "./InfoTooltip";
-
 // Общий компонент попапов
 export function PopupWithForm(props) {
   // Отмена стандартного действия, чтобы страница не перезагружалась после submit'a
