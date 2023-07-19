@@ -1,44 +1,47 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, {useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import * as auth from '../utils/Auth';
 import '../styles/Register.css';
 
-export class Register extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      username: '',
-      password: ''
-    }
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+export const Register = () => {
+  const [formValue, setFormValue] = useState({
+    email: '',
+    password: ''
+  })
+  const navigate = useNavigate();
 
-  }
-  handleChange(e) {
+  const handleChange = (e) => {
     const {name, value} = e.target;
-    this.setState({
+
+    setFormValue({
+      ...formValue,
       [name]: value
     });
   }
-  handleSubmit(e){
-    e.preventDefault();
-    // здесь обрабатываем вход в систему
-  }
-  render(){
-    return(
-      <div className="register">
-        <p className="register__welcome">Регистрация</p>
-        <form onSubmit={this.handleSubmit} className="register__form">
-          <input required id="username" name="username" type="text" value={this.state.username} onChange={this.handleChange} placeholder="Email" />
-          <input required id="password" name="password" type="password" value={this.state.password} onChange={this.handleChange} placeholder="Пароль" />
-          <div className="register__button-container">
-            <button type="submit" className="register__link">Зарегистрироваться</button>
-          </div>
-        </form>
-        <div className="register__signup">
-          <p>Уже зарегистрированны?</p>
-          <Link to="/register" className="signup__link">Войти</Link>
+
+  const handleSubmit = (e) => {
+      e.preventDefault()
+      const { email, password } = formValue;
+      auth.register( email, password ).then((res) => {
+        navigate('/sign-in', {replace: true});
+      }
+    );
+  } 
+
+  return(
+    <div className="register">
+      <p className="register__welcome">Регистрация</p>
+      <form onSubmit={handleSubmit} className="register__form">
+        <input required id="email" name="email" type="text" value={formValue.email} onChange={handleChange} placeholder="Email" />
+        <input required id="password" name="password" type="password" value={formValue.password} onChange={handleChange} placeholder="Пароль" />
+        <div className="register__button-container">
+          <button type="submit" className="register__link">Зарегистрироваться</button>
         </div>
+      </form>
+      <div className="register__signup">
+        <p>Уже зарегистрированны?</p>
+        <Link to="/register" className="signup__link">Войти</Link>
       </div>
-    )
-  }
+    </div>
+  )
 }
