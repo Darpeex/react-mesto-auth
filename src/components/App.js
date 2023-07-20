@@ -24,7 +24,7 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isInfoTooltip, setIsInfoTooltip] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
-  const [currentUser, setCurrentUser] = useState('');
+  const [currentUser, setCurrentUser] = useState({});
   const [userData, setUserData] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [cards, setCards] = useState([]);
@@ -65,7 +65,7 @@ function App() {
           setUserData(userData)
           navigate("/main", {replace: true})
         }
-      });
+      }).catch((err) => console.log(`Ошибка: ${err}`)); 
     }
   }
 
@@ -140,10 +140,8 @@ function App() {
   }
   // Поддержка лайков и дизлайков
   function handleCardLike(card) {
-    // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some(like => like._id === currentUser._id);
-    // Отправляем запрос в API и получаем обновлённые данные карточки
-    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+    const isLiked = card.likes.some(like => like._id === currentUser._id); // Снова проверяем, есть ли уже лайк на этой карточке
+    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => { // Отправляем запрос в API и получаем обновлённые данные карточки
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
     })    
     .catch((err) => console.log(`Ошибка: ${err}`)); 
@@ -174,7 +172,7 @@ function App() {
 
 // Получаем результат запроса на регистрацию
   const handleResult = (result) => {
-  setResult(result)
+    setResult(result)
 }
 
 // Сообщение об ошибке при регистрации - необязательно
@@ -198,12 +196,12 @@ function App() {
 {/* Основное содержимое страницы */}
             <Route path="/main" element={<ProtectedRouteElement
               element={ Main }  
-                onEditProfile={handleEditProfileClick} // Передаём в Main функцию открытия попапа редактирования профиля
-                onAddPlace={handleAddPlaceClick} // Передаём в Main функцию открытия попапа добавления карточки
-                onEditAvatar={handleEditAvatarClick} // Передаём в Main функцию открытия попапа редактирования аватарки
-                onCardClick={handleCardClick} // Прокидываем в Card обработчик handleCardClick, через компонент Main
-                onCardLike={handleCardLike} // Прокидываем в Card обработчик handleCardLike, через компонент Main
-                onCardDelete={handleCardDelete} // Прокидываем в Card обработчик handleCardDelete, через компонент Main
+              onEditProfile={handleEditProfileClick} // Передаём в Main функцию открытия попапа редактирования профиля
+              onAddPlace={handleAddPlaceClick} // Передаём в Main функцию открытия попапа добавления карточки
+              onEditAvatar={handleEditAvatarClick} // Передаём в Main функцию открытия попапа редактирования аватарки
+              onCardClick={handleCardClick} // Прокидываем в Card обработчик handleCardClick, через компонент Main
+              onCardLike={handleCardLike} // Прокидываем в Card обработчик handleCardLike, через компонент Main
+              onCardDelete={handleCardDelete} // Прокидываем в Card обработчик handleCardDelete, через компонент Main
               loggedIn={loggedIn} />} />
             <Route path="/sign-in" element={<Login handleLogin={handleLogin} onResult={handleResult} onInfoTooltip={handleInfoTooltip} errorMessage={takeErrorMessage} />} />
             <Route path="/sign-up" element={<Register onResult={handleResult} onInfoTooltip={handleInfoTooltip} errorMessage={takeErrorMessage} />} />
@@ -238,3 +236,49 @@ function App() {
 }
 
 export default App;
+
+//Можно создать переменную для отслеживания состояния загрузки во время ожидания ответа от сервера:
+//  const [isLoading, setIsLoading] = React.useState(false);
+ 
+//  И ее можно теперь изменять до вызова запроса (true) и в блоке finally после запроса завершать (false), тем самым управляя текстом кнопки сабмита в каждом попапе. Для этого нужно передавать isLoading в каждый попап и там менять текст кнопки:
+ 
+//   buttonText={isLoading? 'Сохранение...' : 'Сохранить'}
+  
+//  И еще можно сделать контекст для передачи isLoading и closeAllPopups, чтобы не передавать их в пропсы в каждый компонент. 
+//  <AppContext.Provider value={{ isLoading, closeAllPopups }}>
+  
+//  Нужно его указать сразу над  CurrentUserContext, обернув все приложение в него.
+//  И теперь можно isLoading, closeAllPopups брать из контекста, а не из пропсов. Очистятся пропсы многих компонентов. Для этого и создаются контексты
+
+
+
+// Можно лучше
+// Если интересно, посмотрите, как можно избавиться от дублирования изменения текста кнопки сабмита, отлова ошибок и закрытия попапа в каждом запросе:
+// // можно сделать универсальную функцию, которая принимает функцию запроса
+//   function handleSubmit(request) {
+//     // изменяем текст кнопки до вызова запроса
+//     setIsLoading(true);
+//     request()
+//       // закрывать попап нужно только в `then`
+//       .then(closeAllPopups)
+//       // в каждом запросе нужно ловить ошибку
+//       // console.error обычно используется для логирования ошибок, если никакой другой обработки ошибки нет
+//       .catch(console.error)
+//       // в каждом запросе в `finally` нужно возвращать обратно начальный текст кнопки
+//       .finally(() => setIsLoading(false));
+//   }
+ 
+// Пример оптимизации обработчика сабмита формы профиля
+//   // пример оптимизации обработчика сабмита формы профиля
+//   function handleProfileFormSubmit(inputValues) {
+//     // создаем функцию, которая возвращает промис, так как любой запрос возвращает его
+//     function makeRequest() {
+//       // `return` позволяет потом дальше продолжать цепочку `then, catch, finally`
+//       return api.editProfile(inputValues).then(setCurrentUser);
+//     }
+//     // вызываем универсальную функцию, передавая в нее запрос
+//     handleSubmit(makeRequest);
+//   }
+ 
+// Если внутри безымянной (стрелочной) функции вызывается одна функция с точно такими же аргументами, то эта безымянная функция не нужна. Это лишняя обертка вокруг самой функции, которую можно использовать просто сразу в коде
+// В итоге, у Вас исчезнет огромное кол-во дублирования логики из кода. 
