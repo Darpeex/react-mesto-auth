@@ -3,15 +3,15 @@ import { PopupWithForm } from "./PopupWithForm"
 import successfully from "../images/successfully.svg"
 import unsuccessfully from "../images/unsuccessfully.svg"
 
-export const InfoTooltip = ({ isOpen, onClose, onResult }) => { // Передаётся текущее значение свойств isOpen и onClose
-  // console.log(onResult)
+export const InfoTooltip = ({ isOpen, onClose, result }) => { // Передаётся текущее значение свойств isOpen и onClose
   return( // В строке ниже передаём значения пропсов попапа в общую структуру/компонент попапа PopupWithForm
     <PopupWithForm
       id="InfoTooltip"
       formId="InfoTooltip"
-      title={onResult ? "Вы успешно зарегистрировались!" : "Что-то пошло не так! Попробуйте ещё раз."}
+      title={result ? "Вы успешно зарегистрировались!" : "Что-то пошло не так! Попробуйте ещё раз."}
+      // title={`${result}`}
       name="InfoTooltip"
-      src={onResult ? successfully : unsuccessfully}
+      src={result ? successfully : unsuccessfully}
       class="info-tooltip"
       isOpen={isOpen}
       onClose={onClose} >

@@ -28,6 +28,7 @@ function App() {
   const [userData, setUserData] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [cards, setCards] = useState([]);
+  const [result, setResult] = useState();
 
 // Возвращает объект location, представляющий текущий URL
   const location = useLocation();
@@ -174,9 +175,9 @@ function App() {
   }
 
 // Удаляем токен из браузерного хранилища  
-function handleResult(result) {
+  const handleResult = (result) => {
   console.log(result)
-  return result;
+  setResult(result)
 }
 
 // Происходит отрисовка компонентов?
@@ -225,7 +226,7 @@ function handleResult(result) {
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
 {/* Попап результата регистрации */}
-          <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} onResult={handleResult}/>
+          <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} result={result}/>
         </CardsContext.Provider>
         </CurrentUserContext.Provider>
 

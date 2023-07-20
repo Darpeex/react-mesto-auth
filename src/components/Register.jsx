@@ -23,8 +23,8 @@ export const Register = ({ onInfoTooltip, onResult }) => {
     e.preventDefault()
     const { password, email } = formValue;
     auth.register( password, email ).then((res) => {
-      if (res === 'error') {
-        console.log(res)
+      if (res.error) {
+        console.log(res.error)
         onInfoTooltip()
         onResult(false)
       } else {
