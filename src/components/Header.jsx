@@ -18,3 +18,26 @@ export function Header({ location, userData, onSignOut }) {
       </header>
   );
 }
+
+
+
+// Если интересно будет, то вот так можно отрисовывать определенный контент под определенный путь:
+
+//       <Route exact path="/">
+//         <div className="header__wrapper">
+//           <p className="header__user">{email}</p>
+//           <button className="header__logout" onClick={handleSignOut}>
+//             Выйти
+//           </button>
+//         </div>
+//       </Route>
+//       <Route path="/signup">
+//         <Link className="header__auth-link" to="signin">
+//           Войти
+//         </Link>
+//       </Route>
+//       <Route path="/signin">
+//         <Link className="header__auth-link" to="signup">
+//           Регистрация
+//         </Link>
+//       </Route>

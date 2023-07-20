@@ -19,7 +19,7 @@ export function Card({ card, onCardClick, onCardLike, onCardDelete }) {
 
   return (
 // Секция, блок elements
-    <article className="elements-block" key={card._id}>
+    <article className="elements-block">
       <img src={card.link} alt={card.name} onClick={() => handleClick(card)} className="elements-block__image"/>
       {isOwn && <button className="elements-block__delete-button" onClick={handleDeleteClick}></button>} {/* Если карточка наша isOwn - добавляется корзина = кнока удаления */}
       <div className="elements-block__text">

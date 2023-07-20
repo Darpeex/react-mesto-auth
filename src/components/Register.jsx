@@ -22,17 +22,13 @@ export const Register = ({ onInfoTooltip, onResult, errorMessage }) => {
     e.preventDefault()
     const { password, email } = formValue;
     auth.register( password, email ).then((res) => {
-      if (res.error) {
-        onInfoTooltip()
-        onResult(false)
-        errorMessage(res.error)
-      } else {
         onResult(true)
-        onInfoTooltip()
         navigate('/sign-in', {replace: true});
-      }
-      }
-    )
+    }).catch((err) => {
+      onResult(false)
+      errorMessage(err)
+    })
+    .finally(onInfoTooltip())
   }
 
   return(
