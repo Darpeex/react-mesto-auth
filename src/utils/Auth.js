@@ -1,6 +1,15 @@
 // • функция register - принимает почту и пароль, отправляет запрос регистрации на /signup
 export const BASE_URL = 'https://auth.nomoreparties.co';
 
+// Проверка статуса запроса 
+  function handleResponse(res) { 
+    if (res.ok) { 
+      return res.json() 
+    } else { 
+      return Promise.reject(`Ошибка: ${res.status}`) 
+    }
+  } 
+
 export const register = ( password, email ) => {
   return fetch(`${BASE_URL}/signup`, {
     method: 'POST',
@@ -10,11 +19,8 @@ export const register = ( password, email ) => {
     },
     body: JSON.stringify({ password, email })
   })
-  .then((response => response.json()))
-  .then((res) => {
-    return res;
-  })
-  .catch((err) => console.log(err));
+  .then(handleResponse)
+  .then((res) => res);
 };
 
 // • функция login - принимает почту и пароль, отправляет запрос авторизации на /signin . В ответ сервер вернет jwt, который нужно сохранить в localStorage
@@ -27,14 +33,13 @@ export const login = ( password, email ) => {
     },
     body: JSON.stringify({ password, email })
   })
-  .then((response => response.json()))
+  .then(handleResponse)
   .then((data) => {
     if (data.token){
       localStorage.setItem('jwt', data.token);
     }
       return data;
   })
-  .catch(err => console.log(err))
 };
 
 // • функция checkToken - принимает jwt, отправляет запрос на /users/me и возвращает данные пользователя
@@ -47,7 +52,6 @@ export const checkToken = ( jwt ) => {
       "Authorization" : `Bearer ${jwt}`
     }
   })
-  .then(res => res.json())
+  .then(handleResponse)
   .then(data => data)
-  .catch(err => console.log(err))
 } 
