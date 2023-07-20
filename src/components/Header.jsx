@@ -2,8 +2,6 @@
 import { Link } from 'react-router-dom'; 
 
 export function Header({ location, userData, onSignOut }) {
-  // console.log(location.pathname)
-  
   function handleDeleteTocken() {
     onSignOut();
   }

@@ -8,7 +8,7 @@ export const InfoTooltip = ({ isOpen, onClose, result, error }) => { // Пере
     <PopupWithForm
       id="InfoTooltip"
       formId="InfoTooltip"
-      // title={result ? "Вы успешно зарегистрировались!" : "Что-то пошло не так! Попробуйте ещё раз."} 
+      // title={result ? "Вы успешно зарегистрировались!" : "Что-то пошло не так! Попробуйте ещё раз."} // стандартный вариант вывода
       title={result ? "Вы успешно зарегистрировались!" : `${error}`}
       name="InfoTooltip"
       src={result ? successfully : unsuccessfully}

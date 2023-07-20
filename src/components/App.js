@@ -29,7 +29,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [cards, setCards] = useState([]);
   const [result, setResult] = useState();
-  const [error, setError] = useState();
+  const [error, setError] = useState('');
 
 // Возвращает объект location, представляющий текущий URL
   const location = useLocation();
@@ -54,17 +54,14 @@ function App() {
   }, [isAnyPopupOpened]);
 
   const jwt = localStorage.getItem('jwt');
-  const tokenCheck = () => {
-    // если у пользователя есть токен в localStorage,
-    // эта функция проверит валидность токена
+  const tokenCheck = () => { // если у пользователя есть токен в localStorage, эта функция проверит валидность токена
     if (jwt){
-      // проверим токен
-      auth.checkToken(jwt).then((res) => {
+      auth.checkToken(jwt).then((res) => { // проверим токен
         if (res){
           const userData = { // здесь можем получить данные пользователя!
             email: res.data.email
           }
-          setLoggedIn(true);// авторизуем пользователя
+          setLoggedIn(true); // авторизуем пользователя
           setUserData(userData)
           navigate("/main", {replace: true})
         }
@@ -85,6 +82,7 @@ function App() {
     })
     .catch((err) => console.log(`Ошибка: ${err}`));
   }, []);
+
 // Обновление данных пользователя на сервере
   function handleUpdateUser({ name, description }) { // данные берутся из инпутов после отправки формы (submit)
     api.setUserInfo({ name, description }).then((userInfo) => { // важно передавать userInfo, потому что если в функцию передавать объект { name, description }...
@@ -93,6 +91,7 @@ function App() {
     })
     .catch((err) => console.log(`Ошибка: ${err}`)); 
   }
+
 // Обновление аватарки профиля
   function handleUpdateAvatar({ avatar }) { // данные берутся из поля попапа после отправки формы (submit)
     api.editAvatar({ avatar }).then((userInfo) => { // передаётся обновлённые данные userInfo
@@ -173,19 +172,19 @@ function App() {
     setUserData({});    
   }
 
-// Удаляем токен из браузерного хранилища  
+// Получаем результат запроса на регистрацию
   const handleResult = (result) => {
   console.log(result)
   setResult(result)
 }
 
-// Сообщение об ошибке - необязателььно, но можно
+// Сообщение об ошибке при регистрации - необязательно
   const takeErrorMessage = (error) => {
     console.log(error)
     setError(error)
   }
 
-// Происходит отрисовка компонентов?
+// Происходит отрисовка компонентов
   return (
     <div className="App">
       <div className="page">
