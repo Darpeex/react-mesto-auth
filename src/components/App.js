@@ -205,7 +205,7 @@ function App() {
                 onCardLike={handleCardLike} // Прокидываем в Card обработчик handleCardLike, через компонент Main
                 onCardDelete={handleCardDelete} // Прокидываем в Card обработчик handleCardDelete, через компонент Main
               loggedIn={loggedIn} />} />
-            <Route path="/sign-in" element={<Login handleLogin={handleLogin} />} />
+            <Route path="/sign-in" element={<Login handleLogin={handleLogin} onResult={handleResult} onInfoTooltip={handleInfoTooltip} errorMessage={takeErrorMessage} />} />
             <Route path="/sign-up" element={<Register onResult={handleResult} onInfoTooltip={handleInfoTooltip} errorMessage={takeErrorMessage} />} />
           </Routes>
     

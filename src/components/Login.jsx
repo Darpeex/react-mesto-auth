@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import * as auth from '../utils/Auth';
 import '../styles/Login.css';
 
-export const Login = ({ handleLogin }) => {
+export const Login = ({ handleLogin, onInfoTooltip, onResult, errorMessage }) => {
   const navigate = useNavigate();
 
   const [formValue, setFormValue] = useState({
@@ -27,9 +27,14 @@ export const Login = ({ handleLogin }) => {
     auth.login( formValue.password, formValue.email )
       .then((data) => {
         if (data.token){
+          console.log(data)
           setFormValue({ password: '', email: ''});
           handleLogin();
           navigate('/main', {replace: true});
+        } else {
+          onInfoTooltip()
+          onResult(false)
+          errorMessage('Токен не найден, зарегистрируйтесь')
         }
       })
       .catch(err => console.log(err));
