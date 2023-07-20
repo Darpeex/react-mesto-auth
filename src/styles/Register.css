@@ -68,11 +68,6 @@
 .register__form input:first-child {
   margin-bottom: 30px;
 }
-.register__form label {
-  font-size: 18px;
-  margin-top: 12px;
-  margin-bottom: 6px;
-}
 .register__signup {
   display: flex;
   align-items: center;

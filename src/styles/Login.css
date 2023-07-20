@@ -69,11 +69,6 @@
 .login__form input:first-child {
   margin-bottom: 30px;
 }
-.login__form label {
-  font-size: 18px;
-  margin-top: 12px;
-  margin-bottom: 6px;
-}
 .login__signup {
   display: flex;
   align-items: center;
