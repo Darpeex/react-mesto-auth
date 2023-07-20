@@ -12,7 +12,6 @@ export const Register = ({ onInfoTooltip, onResult, errorMessage }) => {
 
   const handleChange = (e) => {
     const {name, value} = e.target;
-    console.log(e.target.value)
     setFormValue({
       ...formValue,
       [name]: value

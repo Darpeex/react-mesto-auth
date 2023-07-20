@@ -174,13 +174,11 @@ function App() {
 
 // Получаем результат запроса на регистрацию
   const handleResult = (result) => {
-  console.log(result)
   setResult(result)
 }
 
 // Сообщение об ошибке при регистрации - необязательно
   const takeErrorMessage = (error) => {
-    console.log(error)
     setError(error)
   }
 
