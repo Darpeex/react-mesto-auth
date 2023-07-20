@@ -57,12 +57,10 @@ function App() {
   const tokenCheck = () => {
     // если у пользователя есть токен в localStorage,
     // эта функция проверит валидность токена
-    // console.log(jwt)
     if (jwt){
       // проверим токен
       auth.checkToken(jwt).then((res) => {
         if (res){
-          // console.log(res.data.email)
           const userData = { // здесь можем получить данные пользователя!
             email: res.data.email
           }

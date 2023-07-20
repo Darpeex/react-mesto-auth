@@ -28,7 +28,6 @@ export const Register = ({ onInfoTooltip, onResult, errorMessage }) => {
         onResult(false)
         errorMessage(res.error)
       } else {
-        console.log('ok')
         onResult(true)
         onInfoTooltip()
         navigate('/sign-in', {replace: true});

@@ -26,7 +26,6 @@ export const Login = ({ handleLogin }) => {
     }
     auth.login( formValue.password, formValue.email )
       .then((data) => {
-        // console.log(data)
         if (data.token){
           setFormValue({ password: '', email: ''});
           handleLogin();
