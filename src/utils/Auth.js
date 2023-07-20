@@ -29,11 +29,11 @@ export const login = ( password, email ) => {
   })
   .then((response => response.json()))
   .then((data) => {
-    // console.log(response)
+    console.log(data)
     if (data.token){
       localStorage.setItem('jwt', data.token);
-      return data;
     }
+      return data;
   })
   .catch(err => console.log(err))
 };

@@ -3,7 +3,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import * as auth from '../utils/Auth';
 import '../styles/Register.css';
 
-export const Register = () => {
+export const Register = ({ onInfoTooltip, onResult }) => {
   const [formValue, setFormValue] = useState({
     password: '',
     email: '',
@@ -23,18 +23,26 @@ export const Register = () => {
     e.preventDefault()
     const { password, email } = formValue;
     auth.register( password, email ).then((res) => {
-      console.log(res)
+      if (res === 'error') {
+        console.log(res)
+        onInfoTooltip()
+        onResult(false)
+      } else {
+        console.log('ok')
+        onResult(true)
+        onInfoTooltip()
         navigate('/sign-in', {replace: true});
       }
-    ).catch((e) => console.log(e)) 
+      }
+    )
   }
 
   return(
     <div className="register">
       <p className="register__welcome">Регистрация</p>
       <form onSubmit={handleSubmit} className="register__form">
-        <input required id="email" name="email" type="text" value={formValue.email} onChange={handleChange} placeholder="Email" />
-        <input required id="password" name="password" type="password" value={formValue.password} onChange={handleChange} placeholder="Пароль" />
+        <input required minLength="2" maxLength="30" id="email" name="email" type="email" value={formValue.email} onChange={handleChange} placeholder="Email" />
+        <input required  minLength="6" maxLength="30" id="password" name="password" type="password" value={formValue.password} onChange={handleChange} placeholder="Пароль" />
         <div className="register__button-container">
           <button type="submit" className="register__link">Зарегистрироваться</button>
         </div>

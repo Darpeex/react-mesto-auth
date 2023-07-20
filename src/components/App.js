@@ -52,11 +52,10 @@ function App() {
   }, [isAnyPopupOpened]);
 
   const jwt = localStorage.getItem('jwt');
-  // console.log(jwt)
   const tokenCheck = () => {
     // если у пользователя есть токен в localStorage,
     // эта функция проверит валидность токена
-    console.log(jwt)
+    // console.log(jwt)
     if (jwt){
       // проверим токен
       auth.checkToken(jwt).then((res) => {
@@ -174,6 +173,12 @@ function App() {
     setUserData({});    
   }
 
+// Удаляем токен из браузерного хранилища  
+function handleResult(result) {
+  console.log(result)
+  return result;
+}
+
 // Происходит отрисовка компонентов?
   return (
     <div className="App">
@@ -189,17 +194,16 @@ function App() {
             <Route path="/*" element={loggedIn ? <Navigate to="/main" replace /> : <Navigate to="/sign-in" replace />} />
 {/* Основное содержимое страницы */}
             <Route path="/main" element={<ProtectedRouteElement
-              element={ Main }
+              element={ Main }  
                 onEditProfile={handleEditProfileClick} // Передаём в Main функцию открытия попапа редактирования профиля
                 onAddPlace={handleAddPlaceClick} // Передаём в Main функцию открытия попапа добавления карточки
                 onEditAvatar={handleEditAvatarClick} // Передаём в Main функцию открытия попапа редактирования аватарки
-                onInfoTooltip={handleInfoTooltip} // Прокидываем в Main обработчик handleInfoTooltip, через компонент Main
                 onCardClick={handleCardClick} // Прокидываем в Card обработчик handleCardClick, через компонент Main
                 onCardLike={handleCardLike} // Прокидываем в Card обработчик handleCardLike, через компонент Main
                 onCardDelete={handleCardDelete} // Прокидываем в Card обработчик handleCardDelete, через компонент Main
               loggedIn={loggedIn} />} />
             <Route path="/sign-in" element={<Login handleLogin={handleLogin} />} />
-            <Route path="/sign-up" element={<Register />} />
+            <Route path="/sign-up" element={<Register onResult={handleResult} onInfoTooltip={handleInfoTooltip}/>} />
           </Routes>
     
 {/* Подвал сайта */}
@@ -221,7 +225,7 @@ function App() {
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
 {/* Попап результата регистрации */}
-          <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} loggedIn={loggedIn} />
+          <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} onResult={handleResult}/>
         </CardsContext.Provider>
         </CurrentUserContext.Provider>
 
