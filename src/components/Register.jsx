@@ -26,9 +26,9 @@ export const Register = ({ onInfoTooltip, onResult, errorMessage }) => {
       navigate('/sign-in', {replace: true});
     }).catch((err) => {
       onResult(false)
-      errorMessage(err)
+      errorMessage('Похоже, вы уже зарегистрированы')
     })
-    .finally(onInfoTooltip())
+    .finally(onInfoTooltip)
   }
 
   return(
