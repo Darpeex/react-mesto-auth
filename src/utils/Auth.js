@@ -5,8 +5,10 @@ export const BASE_URL = 'https://auth.nomoreparties.co';
   function handleResponse(res) { 
     if (res.ok) { 
       return res.json() 
-    } else { 
-      return Promise.reject(`Ошибка: ${res.status}`) 
+    } else {
+      return Promise.reject(`Ошибка: похоже вы уже зарегистрированы`) 
+      // return Promise.reject(`Ошибка: ${res.status}`)
+      // После исправления замечаний, потерялся и не нашёл, как выводить текстовую ошибку, т.е. не "Ошибка: 400", а "Вы уже зарегистрированны" или что-то такое с бекенда прилетало
     }
   } 
 

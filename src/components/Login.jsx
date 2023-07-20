@@ -26,18 +26,15 @@ export const Login = ({ handleLogin, onInfoTooltip, onResult, errorMessage }) =>
     }
     auth.login( formValue.password, formValue.email )
       .then((data) => {
-        if (data.token){
-          console.log(data)
           setFormValue({ password: '', email: ''});
           handleLogin();
           navigate('/main', {replace: true});
-        } else {
-          onInfoTooltip()
+        }).catch(err => {
           onResult(false)
           errorMessage('Токен не найден, зарегистрируйтесь')
-        }
-      })
-      .catch(err => console.log(err));
+          onInfoTooltip()
+          console.log(err)
+        });      
   } 
 
   return(
