@@ -3,7 +3,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import * as auth from '../utils/Auth';
 import '../styles/Register.css';
 
-export const Register = ({ onInfoTooltip, onResult }) => {
+export const Register = ({ onInfoTooltip, onResult, errorMessage }) => {
   const [formValue, setFormValue] = useState({
     password: '',
     email: '',
@@ -24,9 +24,9 @@ export const Register = ({ onInfoTooltip, onResult }) => {
     const { password, email } = formValue;
     auth.register( password, email ).then((res) => {
       if (res.error) {
-        console.log(res.error)
         onInfoTooltip()
         onResult(false)
+        errorMessage(res.error)
       } else {
         console.log('ok')
         onResult(true)

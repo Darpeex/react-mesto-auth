@@ -29,6 +29,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [cards, setCards] = useState([]);
   const [result, setResult] = useState();
+  const [error, setError] = useState();
 
 // Возвращает объект location, представляющий текущий URL
   const location = useLocation();
@@ -180,6 +181,12 @@ function App() {
   setResult(result)
 }
 
+// Сообщение об ошибке - необязателььно, но можно
+  const takeErrorMessage = (error) => {
+    console.log(error)
+    setError(error)
+  }
+
 // Происходит отрисовка компонентов?
   return (
     <div className="App">
@@ -204,7 +211,7 @@ function App() {
                 onCardDelete={handleCardDelete} // Прокидываем в Card обработчик handleCardDelete, через компонент Main
               loggedIn={loggedIn} />} />
             <Route path="/sign-in" element={<Login handleLogin={handleLogin} />} />
-            <Route path="/sign-up" element={<Register onResult={handleResult} onInfoTooltip={handleInfoTooltip}/>} />
+            <Route path="/sign-up" element={<Register onResult={handleResult} onInfoTooltip={handleInfoTooltip} errorMessage={takeErrorMessage} />} />
           </Routes>
     
 {/* Подвал сайта */}
@@ -226,7 +233,7 @@ function App() {
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
 {/* Попап результата регистрации */}
-          <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} result={result}/>
+          <InfoTooltip isOpen={isInfoTooltip} onClose={closeAllPopups} result={result} error={error} />
         </CardsContext.Provider>
         </CurrentUserContext.Provider>
 
