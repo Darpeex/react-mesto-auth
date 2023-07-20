@@ -5,7 +5,7 @@
   background-color: #000;
   font-family: 'Inter', Arial, sans-serif;
 
-  min-height: 100%; /* Для липкого футера */
+  min-height: 100vh; /* Для липкого футера */
   display: flex; /* Для липкого футера */
   flex-direction: column; /* Для липкого футера */
   /* Пытался, но в normalize.css нельзя вносить изменения - тесты отклоняют */

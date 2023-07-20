@@ -12,6 +12,7 @@
 }
 .login {
   display: flex;
+  flex-grow: 1; /* растягивается на всю высоту vh */
   margin: 0 auto;
   color: white;
   max-width: 358px;
